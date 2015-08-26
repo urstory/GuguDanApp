@@ -25,7 +25,15 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(intent);
             }
+        }); // scoreBtn 이 터치되면 onClick 부분이 실행된다.
+        scoreBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ScoreActivity.class);
+                startActivity(intent);
+            }
         }); // newGameBtn 이 터치되면 onClick 부분이 실행된다.
+
     } // onCreate
 
     @Override

@@ -1,9 +1,17 @@
 package kr.co.sunnyvale.gugudanapp;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+
+import java.util.Date;
 
 public class ScoreActivity extends Activity {
 
@@ -11,6 +19,38 @@ public class ScoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score);
+
+        ScoreDatabaseHelper helper = new ScoreDatabaseHelper(this.getApplicationContext());
+        SQLiteDatabase sqlitedb = helper.getWritableDatabase();
+
+//        // insert 쿼리 실행
+        sqlitedb.execSQL(
+                "INSERT INTO score " +
+                        "(score, regdate)" +
+                        "VALUES (20, '" + new Date().toString() + "');");
+
+        ListView list = (ListView) findViewById(R.id.ListView01);
+
+        String[] data_columns = new String[] {"score", "regdate"};
+        int[] widgets = new int[] {R.id.TextView01, R.id.TextView02};
+
+        Cursor cursor = sqlitedb.rawQuery(
+                "SELECT _id, score, regdate FROM score " +
+                        "order by score desc;", null);
+
+        if (cursor != null ){
+
+            ListAdapter adapter = null;
+            if (android.os.Build.VERSION.SDK_INT < 11)
+                adapter =new SimpleCursorAdapter(this, R.layout.dbview,cursor, data_columns, widgets);
+            else
+                adapter = new SimpleCursorAdapter(this, R.layout.dbview,cursor, data_columns, widgets, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+            list.setAdapter(adapter);
+        }
+        sqlitedb.close();
+
+
+
     }
 
     @Override
