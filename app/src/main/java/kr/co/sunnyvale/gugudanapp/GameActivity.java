@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,8 +35,26 @@ public class GameActivity extends Activity {
     Button btn3;
     Button btn4;
 
+    TextView scoreBoard;
     TextView timer;
-    int count = 5;
+    int count = 10;
+
+    // 내부 클래스
+    class BtnListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) { // 현재 눌려진 버튼이 파라미터로!
+            Button btn = (Button)view;
+            String str = btn.getText().toString();
+            int value = Integer.parseInt(str); // 문자열을 정수
+            if((value == okValue)){
+                GoodCount++;
+            }else{
+                BadCount++;
+            }
+            scoreBoard.setText(GoodCount + "/" + BadCount);
+            prob(); // new 문제
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +65,15 @@ public class GameActivity extends Activity {
         btn2 = (Button)findViewById(R.id.button2);
         btn3 = (Button)findViewById(R.id.button3);
         btn4 = (Button)findViewById(R.id.button4);
+        btn1.setOnClickListener(new BtnListener());
+        btn2.setOnClickListener(new BtnListener());
+        btn3.setOnClickListener(new BtnListener());
+        btn4.setOnClickListener(new BtnListener());
 
         timer = (TextView)findViewById(R.id.textView3);
+        scoreBoard = (TextView)findViewById(R.id.textView2);
+        scoreBoard.setText("0/0");
+
         // 백그라운드에서 ui를 수정하려면 Handler와 같이 android 제공하는
         // 쓰레드를 이용하는 방법을 사용
         // Thread안에서 UI를 수정하려면 Handler를 이용해야 한다.

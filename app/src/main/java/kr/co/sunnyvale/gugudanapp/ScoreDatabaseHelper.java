@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ScoreDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "score.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String CREATE_TABLE_USERS =
             "CREATE TABLE score (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
