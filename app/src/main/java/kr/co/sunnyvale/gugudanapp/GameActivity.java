@@ -2,15 +2,23 @@ package kr.co.sunnyvale.gugudanapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 public class GameActivity extends Activity {
@@ -26,6 +34,9 @@ public class GameActivity extends Activity {
     Button btn3;
     Button btn4;
 
+    TextView timer;
+    int count = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +47,43 @@ public class GameActivity extends Activity {
         btn3 = (Button)findViewById(R.id.button3);
         btn4 = (Button)findViewById(R.id.button4);
 
+        timer = (TextView)findViewById(R.id.textView3);
+        // 백그라운드에서 ui를 수정하려면 Handler와 같이 android 제공하는
+        // 쓰레드를 이용하는 방법을 사용
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            timer.setText(count + "");
+                        }
+                    });
+                    count--;
+                    if(count == 0){
+                        break; // while문을 빠져나간다.
+                    }
+                    SystemClock.sleep(1000); // 1초간 멈춘다.
+                } // while
+
+                // 기록을 저장
+                ScoreDatabaseHelper helper = new ScoreDatabaseHelper(GameActivity.this);
+                SQLiteDatabase sqlitedb = helper.getWritableDatabase();
+
+                // 년/월/일 문자열을 만들기
+                SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat ( "yyyy.MM.dd", Locale.KOREA );
+                Date currentTime = new Date ( );
+                String mTime = mSimpleDateFormat.format(currentTime);
+                sqlitedb.execSQL(
+                        "INSERT INTO score " +
+                                "(score, regdate)" +
+                                "VALUES (" + (GoodCount - BadCount) + ", '" + mTime + "');");
+                sqlitedb.close();
+
+                finish();
+            }
+        }).start();
         prob();
     }
 

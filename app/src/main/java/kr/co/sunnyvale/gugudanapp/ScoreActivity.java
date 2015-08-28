@@ -11,7 +11,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class ScoreActivity extends Activity {
 
@@ -21,13 +23,7 @@ public class ScoreActivity extends Activity {
         setContentView(R.layout.activity_score);
 
         ScoreDatabaseHelper helper = new ScoreDatabaseHelper(this.getApplicationContext());
-        SQLiteDatabase sqlitedb = helper.getWritableDatabase();
-
-//        // insert 쿼리 실행
-        sqlitedb.execSQL(
-                "INSERT INTO score " +
-                        "(score, regdate)" +
-                        "VALUES (20, '" + new Date().toString() + "');");
+        SQLiteDatabase sqlitedb = helper.getReadableDatabase();
 
         ListView list = (ListView) findViewById(R.id.ListView01);
 
