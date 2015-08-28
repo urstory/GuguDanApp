@@ -50,11 +50,16 @@ public class GameActivity extends Activity {
         timer = (TextView)findViewById(R.id.textView3);
         // 백그라운드에서 ui를 수정하려면 Handler와 같이 android 제공하는
         // 쓰레드를 이용하는 방법을 사용
+        // Thread안에서 UI를 수정하려면 Handler를 이용해야 한다.
+        // 안드로이드는 사용자로 이벤트를 받아들이거나 어떤 결과 출력하기 위하여
+        // 내부적으로 이벤트 쓰레드를 가지고 있다.
+        // Handler인스턴스를 만들면 안드로이드가 가지고 있는 이벤트쓰레드와 연결
         final Handler handler = new Handler();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
+                    // handler에게 ui를 수정할 Runnable객체를 보내면
                     handler.post(new Runnable() {
                         public void run() {
                             timer.setText(count + "");
