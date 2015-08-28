@@ -129,7 +129,7 @@ public class GameActivity extends Activity {
         Set<Integer> set = new HashSet<Integer>();
         set.add(okValue);
         while(true){
-            int m = (int)(Math.random() * 81) + 1; // 1 ~ 81
+            int m = ((int)(Math.random() * 9) + 1) * ((int)(Math.random() * 9) + 1); // 9*9
             set.add(m);
             if(set.size() == 4)
                 break;
